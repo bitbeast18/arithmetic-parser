@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'states.dart';
+import 'utils.dart';
 
 // Deterministic Finite Automata to parse arithmetic expressions.
 // Has 4 states S, A, B, C and is a minimal DFA.
@@ -13,109 +15,6 @@ import 'dart:io';
 // Tokens: INT => Integer. [0,..,9]
 //         SGN => Sign of Integer. ['+', '-']
 //         OPR => Operator. ['+', '-', '*', '/']
-
-class Token {
-  String type;
-
-  Token(String input) {
-    type = input;
-  }
-}
-
-class Utils {
-  static bool isOPR(String input) {
-    return ['+', '-', '*', '/'].contains(input);
-  }
-
-  static bool isINT(String input) {
-    return 48 <= input.codeUnitAt(0) && input.codeUnitAt(0) <= 57;
-  }
-
-  static bool isSGN(String input) {
-    return ['+', '-'].contains(input);
-  }
-
-  static bool isEND(Parser parser) {
-    return parser.head >= parser.tapeLength;
-  }
-}
-
-class States {
-  static void S(Parser parser) {
-    if (parser.isValid && !parser.reachedEnd) {
-      var head = parser.tape[parser.head];
-
-      if (Utils.isINT(head)) {
-        parser.incrementHead();
-        B(parser);
-      } else if (Utils.isSGN(head)) {
-        parser.incrementHead();
-        A(parser);
-      } else {
-        parser.isValid = false;
-      }
-    } else {
-      parser.isValid = false;
-    }
-  }
-
-  static void A(Parser parser) {
-    if (parser.isValid && !parser.reachedEnd) {
-      var head = parser.tape[parser.head];
-
-      if (Utils.isINT(head)) {
-        parser.tokens.add(Token('SGN'));
-        parser.incrementHead();
-        B(parser);
-      } else {
-        parser.isValid = false;
-      }
-    } else {
-      parser.isValid = false;
-    }
-  }
-
-  static void B(Parser parser) {
-    if (parser.isValid && !parser.reachedEnd) {
-      var head = parser.tape[parser.head];
-
-      if (Utils.isOPR(head)) {
-        parser.tokens.add(Token('INT'));
-        parser.incrementHead();
-        C(parser);
-      } else if (Utils.isINT(head)) {
-        parser.incrementHead();
-        B(parser);
-      } else {
-        parser.isValid = false;
-      }
-    } else {
-      if (parser.reachedEnd) {
-        parser.tokens.add(Token('INT'));
-      }
-    }
-  }
-
-  static void C(Parser parser) {
-    if (parser.isValid && !parser.reachedEnd) {
-      var head = parser.tape[parser.head];
-
-      if (Utils.isINT(head)) {
-        parser.tokens.add(Token('OPR'));
-        parser.incrementHead();
-        B(parser);
-      } else if (Utils.isSGN(head)) {
-        parser.tokens.add(Token('OPR'));
-        parser.incrementHead();
-        A(parser);
-      } else {
-        parser.isValid = false;
-      }
-    } else {
-      parser.isValid = false;
-    }
-  }
-}
 
 class Parser {
   int head;
@@ -134,7 +33,7 @@ class Parser {
   }
 
   void parse() {
-    States.S(this);
+    S(this);
   }
 
   void incrementHead() {

@@ -1,5 +1,9 @@
-### This is a "Getting started" task for GSoC 2020. You can refer to the code but please DO NOT COPY it. 
+- ### A more concrete Format Preserving List parser lives [here](https://github.com/bitbeast18/fpl-parser).
+- ### Also, the package:yaml [fork](https://github.com/bitbeast18/yaml) has a prototype for dumping mechanism.
 
+- Both of the above tasks are targetted to be completed before 4th of May, 2020.
+
+> This is a "Getting started" task for GSoC 2020. You can refer to the code but please DO NOT COPY it. 
 > Also, there is a attached license that says the same!
 
 ---
